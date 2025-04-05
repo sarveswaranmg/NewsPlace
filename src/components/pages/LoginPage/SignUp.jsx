@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { nhost } from "../../../utils/nhost";
 import { useAuthenticationStatus } from "@nhost/react";
 import { useNavigate } from "react-router-dom";
