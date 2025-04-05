@@ -58,20 +58,48 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  // const handleSignIn = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const { session, error } = await nhost.auth.signIn({ email, password });
+  //     if (error) throw error;
+  //     alert("Login successful!");
+  //     if (session) {
+  //       navigate("/news"); // Redirect to News Page after login
+  //     }
+  //   } catch (err) {
+  //     console.error("Signin Error:", err.message);
+  //     setError("Wrong email or password");
+  //   }
+  // };
   const handleSignIn = async (e) => {
     e.preventDefault();
+
+    const session = nhost.auth.getSession();
+    if (session) {
+      console.log("User is already signed in");
+      navigate("/news");
+      return;
+    }
+
     try {
       const { session, error } = await nhost.auth.signIn({ email, password });
       if (error) throw error;
       alert("Login successful!");
       if (session) {
-        navigate("/news"); // Redirect to News Page after login
+        navigate("/news");
       }
     } catch (err) {
       console.error("Signin Error:", err.message);
       setError("Wrong email or password");
     }
   };
+  useEffect(() => {
+    const session = nhost.auth.getSession();
+    if (session) {
+      navigate("/news");
+    }
+  }, []);
   const handleGuestLogin = () => {
     setEmail("guestuser@gmail.com");
     setPassword("123456789");
