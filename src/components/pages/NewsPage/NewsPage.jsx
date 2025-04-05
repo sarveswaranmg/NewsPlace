@@ -55,13 +55,7 @@ const GET_ALL_NEWS = gql`
   }
 `;
 
-const CATEGORIES = [
-  "business",
-  "sports",
-  "technology",
-  "entertainment",
-  "health",
-];
+const CATEGORIES = ["Finance", "Business", "Economy", "Technology", "health"];
 const SENTIMENTS = ["Positive", "Negative", "Neutral"];
 const scoreNewsItem = (news, preferences) => {
   let score = 0;
@@ -242,7 +236,10 @@ const NewsPage = () => {
           {news
             .filter(
               (article) =>
-                !selectedCategory || article.category === selectedCategory
+                !selectedCategory ||
+                article.category
+                  .toLowerCase()
+                  .includes(selectedCategory.toLowerCase())
             )
             .filter(
               (article) =>

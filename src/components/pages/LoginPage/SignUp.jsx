@@ -72,7 +72,10 @@ const SignIn = () => {
       setError("Wrong email or password");
     }
   };
-
+  const handleGuestLogin = () => {
+    setEmail("guestuser@gmail.com");
+    setPassword("123456789");
+  };
   return (
     <div className="auth-container">
       <h2>Sign In</h2>
@@ -96,6 +99,16 @@ const SignIn = () => {
       </form>
       <p>
         Don't have Account? <Link to="/signUp">Sign Up</Link>
+      </p>
+      <p
+        style={{
+          cursor: "pointer",
+          color: "blue",
+          textDecoration: "underline",
+        }}
+        onClick={handleGuestLogin}
+      >
+        Login as Guest
       </p>
     </div>
   );

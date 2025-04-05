@@ -1,7 +1,10 @@
-import { useUserId, useUserData } from "@nhost/react";
-import LogoutButton from "../../components/pages/LoginPage/logout";
-import { SignUp } from "../../components/pages/LoginPage/SignUp";
-import "./protectedRoute.css";
+import {
+  useUserId,
+  useUserData,
+  useAuthenticationStatus,
+  useSignOut,
+} from "@nhost/react";
+import { useNavigate, Navigate } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import {
   UserOutlined,
@@ -9,14 +12,16 @@ import {
   ProfileOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { useNavigate, Navigate } from "react-router-dom";
-import { useSignOut } from "@nhost/react";
+import "./protectedRoute.css";
+
 function ProtectedRoute({ children }) {
-  const userId = useUserId(); // Check if user is authenticated
+  const { isAuthenticated, isLoading } = useAuthenticationStatus();
+  const userId = useUserId();
   const user = useUserData();
-  const navigate = useNavigate();
   const { signOut } = useSignOut();
+  const navigate = useNavigate();
   const { Header, Content } = Layout;
+
   const handleLogout = async () => {
     await signOut();
     navigate("/");
@@ -25,25 +30,29 @@ function ProtectedRoute({ children }) {
   const navItems = [
     {
       label: "Home",
-      icon: <HomeOutlined></HomeOutlined>,
+      icon: <HomeOutlined />,
     },
     {
       label: ``,
-      icon: <UserOutlined></UserOutlined>,
+      icon: <UserOutlined />,
       children: [
         {
           label: `${user?.displayName || user?.email || "User"}`,
-          icon: <ProfileOutlined></ProfileOutlined>,
+          icon: <ProfileOutlined />,
         },
         {
           label: `Logout`,
-          icon: <LogoutOutlined onClick={handleLogout}></LogoutOutlined>,
+          icon: <LogoutOutlined />,
           onClick: handleLogout,
         },
       ],
     },
   ];
-  return userId ? (
+
+  // ⏳ Wait for auth check to complete
+  if (isLoading) return <div>Loading...</div>;
+
+  return isAuthenticated ? (
     <>
       <Layout>
         <Header
@@ -55,10 +64,7 @@ function ProtectedRoute({ children }) {
             position: "sticky",
           }}
         >
-          {/* Logo/Title */}
           <h1 style={{ color: "white", margin: 0 }}>NewsPlace</h1>
-
-          {/* Navigation Menu */}
           <Menu
             theme="dark"
             mode="horizontal"
@@ -71,7 +77,7 @@ function ProtectedRoute({ children }) {
       {children}
     </>
   ) : (
-    <Navigate to="/"></Navigate>
+    <Navigate to="/" />
   );
 }
 

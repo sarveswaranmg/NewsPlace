@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import NewsPage from "./components/pages/NewsPage/NewsPage";
-
 import ProtectedRoute from "./utils/ProtectedRoute/protectedRoute";
 import { SignIn, SignUp } from "./components/pages/LoginPage/SignUp";
 
